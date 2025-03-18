@@ -1,0 +1,50 @@
+% constants: a, b, c, d, e, f (the players)
+
+% predicate Resistance(x): x is a resistance 
+% predicate Spy(x): x is a spy
+% predicate Traitor(x): x is a traitor
+% predicate Government(x): x is a government
+
+% predicate Knows(x,y): x knows information y
+% predicate Dead(x): x is dead
+% predicate Attacked(x,y): x attacked y
+% predicate Criminal(x): x is a criminal
+
+set(print_gen).
+
+formulas(assumptions).
+
+spy(a).
+resistance(b).
+resistance(c).
+traitor(d).
+goverment(e).
+goverment(f).
+
+IsSpy(a, b, c, d) -> Knows(a, a) & Knows(a, b) & Knows(a, c) & Knows(a, e) & Knows(a, f).
+
+Traitor(a, d, e, f) -> Attacked(d,e) & Attacked(d, a) & Attacked(d, f).
+
+-Knows(b, a).
+-Knows(b, d).
+-Knows(c, a).
+-Knows(c, d).
+-Knows(d, a).
+-Knows(d, b).
+-Knows(d, c).
+
+-Attacked(a, d).
+Attacked(x, y) -> Dead(y).
+
+Attacked(d, e) | Attacked(d, f) -> Knows(a, d).
+Knows(a, d) -> Criminal(d).
+Criminal(d) -> Attacked(a, d).
+
+Dead(e) & Dead(f) -> ResistanceVictory(b, c, d).
+Dead(d) -> GovermentVictory(a, e, f).
+
+end_of_list.
+
+formulas(goals).
+ResistanceVictory(b, c, d).
+end_of_list.

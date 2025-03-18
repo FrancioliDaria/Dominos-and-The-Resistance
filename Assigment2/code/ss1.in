@@ -1,0 +1,17 @@
+assign(domain_size, 7).
+assign(max_models, -1).
+set(arithmetic).
+
+formulas(assumption).
+c1+c2+c3=c3+c4+c5 & c3+c4+c5=c5+c6+c7 & c5+c6+c7=c7+c8+c1.
+
+end_of_list.
+
+formulas(goal).
+-(c1 = c3 | c1 = c4 | c2 = c3 | c2 = c4).
+-(c1 = c5 | c1 = c6 | c2 = c5 | c2 = c6).
+-(c1 = c7 | c1 = c8 | c2 = c7 | c2 = c8).
+-(c3 = c5 | c3 = c6 | c4 = c5 | c4 = c6).
+-(c3 = c7 | c3 = c8 | c4 = c7 | c4 = c8).
+-(c5 = c7 | c5 = c8 | c6 = c7 | c6 = c8).
+end_of_list.

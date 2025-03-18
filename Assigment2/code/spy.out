@@ -1,0 +1,149 @@
+============================== INPUT =================================
+
+% Reading from file ress.in
+
+set(print_gen).
+
+formulas(assumptions).
+spy(a).
+resistance(b).
+resistance(c).
+traitor(d).
+goverment(e).
+goverment(f).
+IsSpy(a,b,c,d) -> Knows(a,a) & Knows(a,b) & Knows(a,c) & Knows(a,e) & Knows(a,f).
+Traitor(a,d,e,f) -> Attacked(d,e) & Attacked(d,a) & Attacked(d,f).
+-Knows(b,a).
+-Knows(b,d).
+-Knows(c,a).
+-Knows(c,d).
+-Knows(d,a).
+-Knows(d,b).
+-Knows(d,c).
+-Attacked(a,d).
+Attacked(x,y) -> Dead(y).
+Attacked(d,e) | Attacked(d,f) -> Knows(a,d).
+Knows(a,d) -> Criminal(d).
+Criminal(d) -> Attacked(a,d).
+Dead(e) & Dead(f) -> ResistanceVictory(b,c,d).
+Dead(d) -> GovermentVictory(a,e,f).
+end_of_list.
+
+formulas(goals).
+ResistanceVictory(b,c,d).
+end_of_list.
+
+============================== end of input ==========================
+
+============================== PROCESS NON-CLAUSAL FORMULAS ==========
+
+% Formulas that are not ordinary clauses:
+1 IsSpy(a,b,c,d) -> Knows(a,a) & Knows(a,b) & Knows(a,c) & Knows(a,e) & Knows(a,f) # label(non_clause).  [assumption].
+2 Traitor(a,d,e,f) -> Attacked(d,e) & Attacked(d,a) & Attacked(d,f) # label(non_clause).  [assumption].
+3 Attacked(x,y) -> Dead(y) # label(non_clause).  [assumption].
+4 Attacked(d,e) | Attacked(d,f) -> Knows(a,d) # label(non_clause).  [assumption].
+5 Knows(a,d) -> Criminal(d) # label(non_clause).  [assumption].
+6 Criminal(d) -> Attacked(a,d) # label(non_clause).  [assumption].
+7 Dead(e) & Dead(f) -> ResistanceVictory(b,c,d) # label(non_clause).  [assumption].
+8 Dead(d) -> GovermentVictory(a,e,f) # label(non_clause).  [assumption].
+9 ResistanceVictory(b,c,d) # label(non_clause) # label(goal).  [goal].
+
+============================== end of process non-clausal formulas ===
+
+============================== PROCESS INITIAL CLAUSES ===============
+
+% Clauses before input processing:
+
+formulas(usable).
+end_of_list.
+
+formulas(sos).
+spy(a).  [assumption].
+resistance(b).  [assumption].
+resistance(c).  [assumption].
+traitor(d).  [assumption].
+goverment(e).  [assumption].
+goverment(f).  [assumption].
+-IsSpy(a,b,c,d) | Knows(a,a).  [clausify(1)].
+-IsSpy(a,b,c,d) | Knows(a,b).  [clausify(1)].
+-IsSpy(a,b,c,d) | Knows(a,c).  [clausify(1)].
+-IsSpy(a,b,c,d) | Knows(a,e).  [clausify(1)].
+-IsSpy(a,b,c,d) | Knows(a,f).  [clausify(1)].
+-Traitor(a,d,e,f) | Attacked(d,e).  [clausify(2)].
+-Traitor(a,d,e,f) | Attacked(d,a).  [clausify(2)].
+-Traitor(a,d,e,f) | Attacked(d,f).  [clausify(2)].
+-Knows(b,a).  [assumption].
+-Knows(b,d).  [assumption].
+-Knows(c,a).  [assumption].
+-Knows(c,d).  [assumption].
+-Knows(d,a).  [assumption].
+-Knows(d,b).  [assumption].
+-Knows(d,c).  [assumption].
+-Attacked(a,d).  [assumption].
+-Attacked(x,y) | Dead(y).  [clausify(3)].
+-Attacked(d,e) | Knows(a,d).  [clausify(4)].
+-Attacked(d,f) | Knows(a,d).  [clausify(4)].
+-Knows(a,d) | Criminal(d).  [clausify(5)].
+-Criminal(d) | Attacked(a,d).  [clausify(6)].
+-Dead(e) | -Dead(f) | ResistanceVictory(b,c,d).  [clausify(7)].
+-Dead(d) | GovermentVictory(a,e,f).  [clausify(8)].
+-ResistanceVictory(b,c,d).  [deny(9)].
+end_of_list.
+
+formulas(demodulators).
+end_of_list.
+
+============================== PREDICATE ELIMINATION =================
+
+Eliminating spy/1
+
+Eliminating resistance/1
+
+Eliminating traitor/1
+
+Eliminating goverment/1
+
+Eliminating IsSpy/4
+
+Eliminating Traitor/4
+
+Eliminating Knows/2
+10 -Attacked(d,e) | Knows(a,d).  [clausify(4)].
+11 -Knows(b,a).  [assumption].
+12 -Knows(b,d).  [assumption].
+13 -Knows(c,a).  [assumption].
+14 -Knows(c,d).  [assumption].
+15 -Knows(d,a).  [assumption].
+16 -Knows(d,b).  [assumption].
+17 -Knows(d,c).  [assumption].
+18 -Attacked(d,f) | Knows(a,d).  [clausify(4)].
+19 -Knows(a,d) | Criminal(d).  [clausify(5)].
+Derived: Criminal(d) | -Attacked(d,e).  [resolve(19,a,10,b)].
+Derived: Criminal(d) | -Attacked(d,f).  [resolve(19,a,18,b)].
+
+Eliminating Attacked/2
+20 -Criminal(d) | Attacked(a,d).  [clausify(6)].
+21 -Attacked(a,d).  [assumption].
+22 -Attacked(x,y) | Dead(y).  [clausify(3)].
+Derived: -Criminal(d).  [resolve(20,b,21,a)].
+23 Criminal(d) | -Attacked(d,e).  [resolve(19,a,10,b)].
+24 Criminal(d) | -Attacked(d,f).  [resolve(19,a,18,b)].
+
+Eliminating ResistanceVictory/3
+25 -ResistanceVictory(b,c,d).  [deny(9)].
+26 -Dead(e) | -Dead(f) | ResistanceVictory(b,c,d).  [clausify(7)].
+Derived: -Dead(e) | -Dead(f).  [resolve(25,a,26,c)].
+
+Eliminating GovermentVictory/3
+
+Eliminating Criminal/1
+
+============================== end predicate elimination =============
+
+Auto_denials:  (no changes).
+
+Term ordering decisions:
+Predicate symbol precedence:  predicate_order([ Dead ]).
+Function symbol precedence:  function_order([ e, f ]).
+After inverse_order:  (no changes).
+Unfolding symbols: (none).
